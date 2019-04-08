@@ -1,0 +1,171 @@
+   
+    <th:block th:include="/_header"></th:block>
+    
+    
+    <div class="container">
+        
+        <h1 class="h3 mb-3 font-weight-normal">Order Details</h1>
+        
+        
+        <!-- && cartForm.cartLines != null && !cartForm.cartLines.empty -->
+        <th:block th:if="${orderDetail == null}"> 
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">There are no details for this order</span>
+                        <span class="badge bagde-secondary badge-pill">0</span>
+                    </h4>
+                    
+                    <a  href="#"
+                        class="btn btn-primary btn-md active"
+                        role="button"
+                        aria-pressed="true"
+                        th:href="@{/productList}">Products</a>
+                    
+                </div>
+            </div>
+        </th:block>
+        
+        
+        <th:block th:if="${orderDetail != null}">
+        
+            <div class="card shopping-cart">
+                <div class="card-header bg-dark text-light">
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    Order #
+                    
+                    <!--
+                    <a  href="#"
+                        class="btn btn-primary btn-md active pull-right"
+                        role="button"
+                        aria-pressed="true"
+                        th:href="@{/productList}">Continue shopping</a>
+                    -->
+                    <!--<a href="" class="btn btn-outline-info btn-sm pull-right">Continue shopping</a>-->
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+                        <h4 class="product-name"><strong th:utext="${orderDetail.dateCreated}"></strong></h4>
+                        <h4>#
+                            <small th:utext="${orderDetail.id}"></small>
+                        </h4>
+                        <h4>
+                            <small th:utext="${orderDetail.status}"></small>
+                        </h4>
+                    </div>
+
+                    
+                    
+                    <div class="row mb-3" th:each="productLineInfo, varStatus : ${orderDetail.orderProducts}">
+                        <div class="col-12 col-sm-12 col-md-2 text-center">
+                            
+                            <img class="img-responsive"  th:src="${productLineInfo.Product.frontThumbImageUrl}" alt="prewiew" width="120" height="120">
+                            
+                        </div>
+
+                        <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+                            <h4 class="product-name"><strong th:utext="${productLineInfo.Product.name}"></strong></h4>
+                            <h4>
+                                <small th:utext="${productLineInfo.Product.id}"></small>
+                            </h4>
+                        </div>
+                        
+                        <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
+                            <div class="col-3 col-sm-3 col-md-6 text-md-right" style="padding-top: 5px">
+                                <h6><strong th:utext="${#numbers.formatDecimal(productLineInfo.Product.price,3,2,'POINT')}"><span class="text-muted">x</span></strong></h6>
+                            </div>
+
+                            <div class="col-4 col-sm-4 col-md-4">
+                                <div class="quantity">
+                                    <!--
+                                    <span 
+                                            class="form-control" 
+                                            name="quantity" th:value="${cartLineInfo.quantity}" min="0"
+                                            aria-describedby="Quantity" placeholder="" ></span>-->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        <!--
+                        <form th:action="@{|/shoppingCart?code=${cartLineInfo.productInfo.id}|}"
+                                method="POST" class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
+                            <div class="col-3 col-sm-3 col-md-6 text-md-right" style="padding-top: 5px">
+                                <h6><strong th:utext="${#numbers.formatDecimal(cartLineInfo.amount,3,2,'POINT')}"><span class="text-muted">x</span></strong></h6>
+                            </div>
+
+                            <div class="col-4 col-sm-4 col-md-4">
+                                <div class="quantity">
+
+                                    <input type="number" 
+                                            class="form-control" id="quantity" 
+                                            name="quantity" th:value="${cartLineInfo.quantity}" min="0"
+                                            aria-describedby="Quantity" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-2 col-sm-2 col-md-2 text-right">
+                                <button type="submit" 
+                                        name="action"
+                                        id="action" value="remove"
+                                        class="btn btn-outline-danger btn-xs">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+
+                            </div>
+                        </form>
+                        -->
+                    <hr>
+                    </div>
+                    
+
+
+                    <div class="pull-right">
+                        <a href="" class="btn btn-outline-secondary pull-right">Button for an action</a>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <div class="coupon col-md-5 col-sm-5 no-padding-left pull-left">
+                        <!--
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="text" class="form-control" placeholder="cupone code">
+                            </div>
+                            <div class="col-6">
+                                <input type="submit" class="btn btn-default" value="Use cupone">
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                    <div class="pull-right" style="margin: 10px">
+                        
+                        <a  href="#"
+                            class="btn btn-warning btn-md active"
+                            role="button"
+                            aria-pressed="true"
+                            >Re-order</a>
+                        
+                        <a  href="#"
+                            class="btn btn-danger btn-md active"
+                            role="button"
+                            aria-pressed="true"
+                            >Cancel</a>
+                        <!--
+                        th:href="@{/shoppingCartCheckout}"
+                        <div class="pull-right" style="margin: 5px">
+                            Total price: <b th:utext="${#numbers.formatDecimal(cartForm.amountTotal,3,2,'POINT')}"></b>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+            
+        </th:block>
+        
+    </div>
+        
+    <th:block th:include="/_footer"></th:block>

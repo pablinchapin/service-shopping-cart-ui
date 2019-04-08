@@ -1,0 +1,78 @@
+
+    <th:block th:include="/_header"></th:block>
+    
+    
+    <div class="container">
+        
+        <h1 class="h3 mb-3 font-weight-normal">Thanks for your order!</h1>
+        
+        
+        <div class="row">
+            
+            <div class="col-md-4 order-md-2">
+                
+                <h4 class="mb-3">LaChoca</h4>
+                                
+            </div>
+            
+            
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Your order number is: 
+                    <!-- <span th:utext="${lastOrderedCart.orderNum}"></span> -->
+                    
+                    <span>201923030002</span>
+                </h4>
+                
+                
+                <h5 class="mb-3">We hope you enjoy it! </h5>
+                
+                <h5 class="mb-3">Come back soon! </h5>
+                
+                <!--
+                <table>
+                    <tr th:each="var : ${lastOrderedCart}">
+                        --
+                        <td th:text="${var.key}"></td>
+                        <td th:text="${var.value}"></td>
+                        --
+                        <td th:text="${var.orderNum}"></td>
+                    </tr>
+                </table>
+                -->
+                <!--
+                <table>
+                    <tr th:each="var : ${#vars.getVariableNames()}">
+                        <td th:text="${var}"></td>
+                        <td th:text="${#vars.getVariable(var)}"></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>param</td>
+                        <td th:text="${#vars.getVariable('param')}"></td>
+                    </tr>
+                    <tr>
+                        <td>session</td>
+                        <td th:text="${#vars.getVariable('session')}"></td>
+                    </tr>
+                    <tr>
+                        <td>application</td>
+                        <td th:text="${#vars.getVariable('application')}"></td>
+                    </tr>
+                </table>
+                -->
+            </div>
+            
+            
+            
+        
+        </div>
+        
+        
+            
+            
+            
+        
+        </div>
+        
+    
+    <th:block th:include="/_footer"></th:block>

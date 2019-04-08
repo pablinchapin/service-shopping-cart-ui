@@ -19,5 +19,5 @@ public class ServiceShoppingcartUiApplication {
         AuthHeaderFilter authHeaderFilter(){
             return new AuthHeaderFilter();
         }
-
+        
 }
