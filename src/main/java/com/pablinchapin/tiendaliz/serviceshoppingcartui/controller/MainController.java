@@ -7,20 +7,19 @@ package com.pablinchapin.tiendaliz.serviceshoppingcartui.controller;
 
 
 
-import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.HelperPage;
+import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Category;
+import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Product;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.RestResponsePage;
 import java.net.URI;
-
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-
-
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +39,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 //@RequestMapping("/ui")
 public class MainController {
     
+    @Autowired
+    RestTemplate restTemplate;
+    
+    
     //private static final String CATALOG_API_URL = "http://catalog-service/api/catalog";
     private static final String CATALOG_API_URL = "http://localhost:8181/api/catalog";
     
@@ -54,47 +57,33 @@ public class MainController {
     
     @GetMapping("/")
     public ModelAndView home(
-            //@RequestParam(value = "page", defaultValue = "1") int page,
-            //@RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ){
         
-        log.info("MainController");
-    
+        //log.info("MainController");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("index");
         
-        RestTemplate restTemplate = new RestTemplate();
         String url = CATALOG_API_URL + "/type";
+        ParameterizedTypeReference<RestResponsePage<Category>> ptr = new ParameterizedTypeReference<RestResponsePage<Category>>(){};
         
-        int page = 1;
-        int size = 10;
-        
-        //PageRequest pageable = PageRequest.of(page-1, size);
-        
-        //ParameterizedTypeReference<RestResponsePage<Example>> ptr = new ParameterizedTypeReference<RestResponsePage<Example>>(){};
-        /*
         URI targetUrl =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
                 .path("/type")
                 //.queryParam("name", name)
-                //.queryParam("page", page) //pageable.getPageNumber()
-                //.queryParam("size", size) //pageable.getPageSize()
+                .queryParam("page", page) //pageable.getPageNumber()
+                .queryParam("size", size) //pageable.getPageSize()
                 //.queryParam("sort", "id") //pageable.getSort()
                 .build()
                 .toUri();
-        */
-        //Page<Category> typePage = restTemplate.getForObject(url, typePage<Category.class>);
-        //Page<Category> typePage;
-        //RestResponsePage<Example> typePage = restTemplate.exchange(targetUrl, HttpMethod.GET, null, ptr).getBody();
         
-        HelperPage typePage = restTemplate.getForObject(url, HelperPage.class);
         
-        //PageRequest pageable = PageRequest.of(page -1, size);
+        ResponseEntity<RestResponsePage<Category>> result = restTemplate.exchange(targetUrl, HttpMethod.GET, null, ptr);
+        //List<Category> searchResult = result.getBody().getContent();
+        Page<Category> categoryResources = result.getBody();
         
-        mav.addObject("paginationResultCategory", typePage);
+        mav.addObject("paginationResultCategory", categoryResources);
         
-        //Page<T> page = 
-        
-    
     return mav;
     }
     
@@ -106,25 +95,81 @@ public class MainController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ){
         
-        log.info("productList");
-    
+        //log.info("productList");
         ModelAndView mav = new ModelAndView();
         mav.setViewName("productList");
         
         
-        return mav;
+        //String urlCat = CATALOG_API_URL + "/type";
+        ParameterizedTypeReference<RestResponsePage<Category>> ptrCat = new ParameterizedTypeReference<RestResponsePage<Category>>(){};
+        
+        URI targetUrlCategory =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
+                .path("/type")
+                //.queryParam("name", name)
+                .queryParam("page", page) //pageable.getPageNumber()
+                .queryParam("size", size) //pageable.getPageSize()
+                //.queryParam("sort", "id") //pageable.getSort()
+                .build()
+                .toUri();
+        
+        
+        ResponseEntity<RestResponsePage<Category>> resultCategory = restTemplate.exchange(targetUrlCategory, HttpMethod.GET, null, ptrCat);
+        //List<Category> searchResult = result.getBody().getContent();
+        Page<Category> categoryResources = resultCategory.getBody();
+        
+        
+        //String url = CATALOG_API_URL + "/type";
+        ParameterizedTypeReference<RestResponsePage<Product>> ptrProd = new ParameterizedTypeReference<RestResponsePage<Product>>(){};
+        
+        URI targetUrlProduct =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
+                .path("/productList")
+                .queryParam("categoryId", categoryId)
+                .queryParam("page", page) //pageable.getPageNumber()
+                .queryParam("size", size) //pageable.getPageSize()
+                //.queryParam("sort", "id") //pageable.getSort()
+                .build()
+                .toUri();
+        
+        
+        ResponseEntity<RestResponsePage<Product>> result = restTemplate.exchange(targetUrlProduct, HttpMethod.GET, null, ptrProd);
+        //List<Category> searchResult = result.getBody().getContent();
+        Page<Product> productResources = result.getBody();
+        
+        
+        mav.addObject("paginationResultCategory", categoryResources);
+        mav.addObject("paginationResult", productResources);
+        
+    return mav;
     }
     
     
     @GetMapping("/productDetail")
     public ModelAndView viewProductHandler(
             HttpServletRequest request,
-            @RequestParam(value = "id", defaultValue = "") Long id
+            @RequestParam(value = "id", required = true) Long id
     ){
     
         ModelAndView mav = new ModelAndView();
+        mav.setViewName("productDetail");
         
-        return mav;
+        URI targetUrlProduct =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
+                .path("/productDetail")
+                //.queryParam("name", name)
+                .queryParam("id", id) //pageable.getPageNumber()
+                //.queryParam("size", size) //pageable.getPageSize()
+                //.queryParam("sort", "id") //pageable.getSort()
+                .build()
+                .toUri();
+        
+        
+        ResponseEntity<Product> resultProduct = restTemplate.getForEntity(targetUrlProduct, Product.class);
+        Product productResources = resultProduct.getBody();
+        
+        //log.info(productResources.toString());
+        
+        mav.addObject("productInfo", productResources);
+        
+    return mav;
     }
     
     

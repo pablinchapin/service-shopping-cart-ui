@@ -5,6 +5,9 @@
  */
 package com.pablinchapin.tiendaliz.serviceshoppingcartui.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -12,7 +15,7 @@ import lombok.Setter;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+//import org.springframework.data.domain.Sort;
 
 /**
  *
@@ -21,25 +24,28 @@ import org.springframework.data.domain.Sort;
  */
 
 
-
 @Getter
 @Setter
 public class RestResponsePage<T> extends PageImpl<T> {
     
+    //private static final long serialVersionUID = 3248189030448292002L;
     
-    private int number;
-    private int size;
-    private int totalPages;
-    private int numberOfElements;
-    private long totalElements;
-    private boolean previousPage;
-    private boolean first;
-    private boolean nextPage;
-    private boolean last;
-    private List<T> content;
-    private Sort sort;
-    
-    
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public RestResponsePage(
+            @JsonProperty("content") List<T> content, 
+            @JsonProperty("number") int number, 
+            @JsonProperty("size") int size,
+            @JsonProperty("totalElements") Long totalElements, 
+            @JsonProperty("pageable") JsonNode pageable, 
+            @JsonProperty("last") boolean last,
+            @JsonProperty("totalPages") int totalPages, 
+            @JsonProperty("sort") JsonNode sort, 
+            @JsonProperty("first") boolean first,
+            @JsonProperty("numberOfElements") int numberOfElements){
+        
+        super(content, PageRequest.of(number, size), totalElements);
+    }
+
     public RestResponsePage(List<T> content, Pageable pageable, long total) {
         super(content, pageable, total);
     }
@@ -51,11 +57,5 @@ public class RestResponsePage<T> extends PageImpl<T> {
     public RestResponsePage() {
         super(new ArrayList<T>());
     }
-    
-    
-    public PageImpl<T> pageImpl(){
-        return new PageImpl<T>(getContent(), new PageRequest(getNumber(), getSize(), getSort()), getTotalElements());
-    }
-
-    
+  
 }

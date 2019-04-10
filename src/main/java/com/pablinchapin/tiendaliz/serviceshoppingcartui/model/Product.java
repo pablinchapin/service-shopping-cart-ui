@@ -61,4 +61,127 @@ public class Product {
     
     //@Transient
     private boolean inStock = true;
+
+    public Product() {
+    }
+
+    public Product(Long id, Long categoryId, String name, String description, String nutritionalInfo, String brand, double price, double tax, boolean active, String frontImageUrl, String frontThumbImageUrl) {
+        this.id = id;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.description = description;
+        this.nutritionalInfo = nutritionalInfo;
+        this.brand = brand;
+        this.price = price;
+        this.tax = tax;
+        this.active = active;
+        this.frontImageUrl = frontImageUrl;
+        this.frontThumbImageUrl = frontThumbImageUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getNutritionalInfo() {
+        return nutritionalInfo;
+    }
+
+    public void setNutritionalInfo(String nutritionalInfo) {
+        this.nutritionalInfo = nutritionalInfo;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getTax() {
+        return tax;
+    }
+
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getFrontImageUrl() {
+        return frontImageUrl;
+    }
+
+    public void setFrontImageUrl(String frontImageUrl) {
+        this.frontImageUrl = frontImageUrl;
+    }
+
+    public String getFrontThumbImageUrl() {
+        return frontThumbImageUrl;
+    }
+
+    public void setFrontThumbImageUrl(String frontThumbImageUrl) {
+        this.frontThumbImageUrl = frontThumbImageUrl;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" + "id=" + id + ", categoryId=" + categoryId + ", name=" + name + ", description=" + description + ", nutritionalInfo=" + nutritionalInfo + ", brand=" + brand + ", price=" + price + ", tax=" + tax + ", active=" + active + ", frontImageUrl=" + frontImageUrl + ", frontThumbImageUrl=" + frontThumbImageUrl + ", inStock=" + inStock + '}';
+    }
+
+
+    
+    
+    
 }
