@@ -7,8 +7,10 @@ package com.pablinchapin.tiendaliz.serviceshoppingcartui.controller;
 
 
 
+import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.CartInfo;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Category;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Product;
+import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.CartUtils;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.RestResponsePage;
 import java.net.URI;
 import java.util.List;
@@ -173,6 +175,7 @@ public class MainController {
     }
     
     
+    @GetMapping("/shoppingCart")
     public ModelAndView shoppingCartHandler(
             HttpServletRequest request
     ){
@@ -180,7 +183,9 @@ public class MainController {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("shoppingCart");
         
+        CartInfo cartInfo = CartUtils.getCartInSession(request);
         
+        mav.addObject("cartForm", cartInfo);
         
     return mav;
     }
