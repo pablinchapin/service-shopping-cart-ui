@@ -10,6 +10,7 @@ package com.pablinchapin.tiendaliz.serviceshoppingcartui.controller;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.CartInfo;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Category;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.Product;
+import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.ProductInfo;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.CartUtils;
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.util.RestResponsePage;
 import java.net.URI;
@@ -97,7 +98,7 @@ public class MainController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ){
         
-        //log.info("productList");
+        log.info("productList-> "+" categoryId: " +categoryId+ " size: "+size+ " page: "+page);
         ModelAndView mav = new ModelAndView();
         mav.setViewName("productList");
         
@@ -125,7 +126,7 @@ public class MainController {
         
         URI targetUrlProduct =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
                 .path("/productList")
-                .queryParam("categoryId", categoryId)
+                .queryParam("typeId", categoryId)
                 .queryParam("page", page) //pageable.getPageNumber()
                 .queryParam("size", size) //pageable.getPageSize()
                 //.queryParam("sort", "id") //pageable.getSort()
@@ -167,28 +168,17 @@ public class MainController {
         ResponseEntity<Product> resultProduct = restTemplate.getForEntity(targetUrlProduct, Product.class);
         Product productResources = resultProduct.getBody();
         
-        //log.info(productResources.toString());
-        
-        mav.addObject("productInfo", productResources);
-        
-    return mav;
-    }
-    
-    
-    @GetMapping("/shoppingCart")
-    public ModelAndView shoppingCartHandler(
-            HttpServletRequest request
-    ){
-    
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("shoppingCart");
         
         CartInfo cartInfo = CartUtils.getCartInSession(request);
         
+        //log.info(productResources.toString());
+        
+        mav.addObject("productInfo", productResources);
         mav.addObject("cartForm", cartInfo);
         
     return mav;
     }
+    
     
     
     @GetMapping("/customerOrders")
@@ -221,6 +211,23 @@ public class MainController {
     }
     
     
+    
+    @GetMapping("/shoppingCart")
+    public ModelAndView shoppingCartHandler(
+            HttpServletRequest request
+    ){
+    
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("shoppingCart");
+        
+        CartInfo cartInfo = CartUtils.getCartInSession(request);
+        
+        mav.addObject("cartForm", cartInfo);
+        
+    return mav;
+    }
+    
+    
     @PostMapping("/shoppingCart")
     public ModelAndView shoppingCartAddProduct(
             HttpServletRequest request,
@@ -232,6 +239,40 @@ public class MainController {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("shoppingCart");
         
+        //Product product;
+        //Product productData = new Product();
+        
+        URI targetUrlProduct =  UriComponentsBuilder.fromUriString(CATALOG_API_URL)
+                .path("/productDetail")
+                //.queryParam("name", name)
+                .queryParam("id", id) //pageable.getPageNumber()
+                //.queryParam("size", size) //pageable.getPageSize()
+                //.queryParam("sort", "id") //pageable.getSort()
+                .build()
+                .toUri();
+        
+        
+        
+        
+        if(id != null && id > 0){
+            
+            CartInfo cartInfo = CartUtils.getCartInSession(request);
+            
+            ResponseEntity<Product> resultProduct = restTemplate.getForEntity(targetUrlProduct, Product.class);
+            Product productResources = resultProduct.getBody();
+            
+            ProductInfo productInfo = new ProductInfo(productResources);
+            
+            if(action.equals("add")){
+                cartInfo.addProduct(productInfo, quantity);
+            }else{
+                    cartInfo.removeProduct(productInfo);
+            }
+        }
+        
+        CartInfo cartInfo = CartUtils.getCartInSession(request);
+        
+        mav.addObject("cartForm", cartInfo);
             
     return mav;
     }

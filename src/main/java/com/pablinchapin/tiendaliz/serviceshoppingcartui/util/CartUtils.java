@@ -7,11 +7,14 @@ package com.pablinchapin.tiendaliz.serviceshoppingcartui.util;
 
 import com.pablinchapin.tiendaliz.serviceshoppingcartui.model.CartInfo;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author pvargas
  */
+
+@Slf4j
 public class CartUtils {
     
     private final static String CART_ATTRIBUTE_NAME = "newCart";
@@ -21,7 +24,11 @@ public class CartUtils {
         
         CartInfo cartInfo = (CartInfo) request.getSession().getAttribute(CART_ATTRIBUTE_NAME);
         
+        log.info("trayendo session");
+        
         if(cartInfo == null){
+            
+            log.info("trayendo session nula");
             cartInfo = new CartInfo();
             
             request.getSession().setAttribute(CART_ATTRIBUTE_NAME, cartInfo);
